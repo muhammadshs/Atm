@@ -1,5 +1,5 @@
 public class User {
-    Account_old acc;
+   /* Account_old acc;
     private int pass;
     private String userName;
 
@@ -19,5 +19,5 @@ public class User {
 
     public String getUserName() {
         return userName;
-    }
+    }*/
 }

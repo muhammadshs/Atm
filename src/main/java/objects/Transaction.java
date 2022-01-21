@@ -1,20 +1,23 @@
+package objects;
+
+import UI.TypeTransaction;
+
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class Transaction {
-   private TypeTransaction typeTransaction ;
+   private String typeTransaction ;
    private double transactionAmount;
    private LocalDateTime transactionDate;
 
 
-    public Transaction(TypeTransaction typeTransaction, double transactionAmount, LocalDateTime transactionDate) {
+    public Transaction(String typeTransaction, double transactionAmount, LocalDateTime transactionDate) {
         this.typeTransaction = typeTransaction;
         this.transactionAmount = transactionAmount;
         this.transactionDate = transactionDate;
     }
 
     public String getTypeTransaction() {
-        return typeTransaction.toString();
+        return typeTransaction;
     }
 
     public double getTransactionAmount() {

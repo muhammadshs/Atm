@@ -6,10 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.Date;
 
 public class MenuUI extends JFrame implements ActionListener {
     String accountNumber;
@@ -114,6 +112,7 @@ public class MenuUI extends JFrame implements ActionListener {
                 if(balance-minBalance>=d){
                     balance=balance-d;
                     insertDB(balance);
+                    insertTransaction(TypeTransaction.withdraw,d);
                     InfoUI infoUI=new InfoUI(3,balance);
                     this.setVisible(false);
                 }
@@ -128,12 +127,15 @@ public class MenuUI extends JFrame implements ActionListener {
                 if(balance-minBalance>=d){
                     balance=balance+d;
                     insertDB(balance);
+                    insertTransaction(TypeTransaction.deposit,d);
                     InfoUI infoUI=new InfoUI(2,balance);
                     this.setVisible(false);
+
                 }
             }
             if (jRadioButtonLast10Transaction.isSelected()){
-
+                TransactionListUI transactionListUI=new TransactionListUI(accountNumber);
+                this.setVisible(false);
             }
             if (jRadioButtonExit.isSelected()){
                 InfoUI infoUI=new InfoUI(5,balance);
@@ -157,6 +159,24 @@ public class MenuUI extends JFrame implements ActionListener {
             statement = DBConnector.getConnect().prepareStatement(sql);
             statement.setDouble(1,d);
             statement.setString(2,getAccountNumber());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void insertTransaction(TypeTransaction typeTransaction,double transactionAmount){
+        Date date=new Date();
+        java.sql.Date date1= new java.sql.Date(date.getTime());
+        String sql="INSERT INTO public.transaction (type,amount,date,accountnumber) VALUES (?,?,?,?)";
+        PreparedStatement statement= null;
+        try {
+            statement = DBConnector.getConnect().prepareStatement(sql);
+            statement.setString(1,typeTransaction.toString());
+            statement.setDouble(2,transactionAmount);
+            statement.setDate(3,date1);
+            statement.setString(4,getAccountNumber());
+
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
