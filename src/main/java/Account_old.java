@@ -1,17 +1,15 @@
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
 
-public class Account {
+public class Account_old {
     private String accountNumber;
     private double amount;
     private double balance;
     private double minBalance;
     private ArrayList<Transaction> listTransaction=new ArrayList<>();
 
-    public Account(String accountNumber, double balance, double minBalance) {
+    public Account_old(String accountNumber, double balance, double minBalance) {
         this.accountNumber = accountNumber;
         this.balance = balance;
         this.minBalance = minBalance;

@@ -1,17 +1,19 @@
 import UI.LoginUI;
-import UI.MenuUI;
 
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Runner {
-    public static void main(String[] args) {
-        MenuUI menuUI=new MenuUI();
-        //LoginUI loginUI=new LoginUI();
-        User[] users = new User[1];
-        users[0] = new User(new Account("5000", 200, 100), 1234, "niush");
+    public static void main(String[] args) throws SQLException {
+
+
+        //MenuUI menuUI=new MenuUI();
+        LoginUI loginUI=new LoginUI();
+       /* User[] users = new User[1];
+        users[0] = new User(new Account_old("5000", 200, 100), 1234, "niush");
         System.out.println("----welcome ATM---");
         System.out.println("Please enter your Username");
         Scanner scanner = new Scanner(System.in);
@@ -72,6 +74,6 @@ public class Runner {
                 }
             }
 
-        }
+        }*/
     }
 }

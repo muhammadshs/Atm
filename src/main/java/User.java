@@ -1,15 +1,15 @@
 public class User {
-    Account acc;
+    Account_old acc;
     private int pass;
     private String userName;
 
-    public User(Account acc, int pass, String userName) {
+    public User(Account_old acc, int pass, String userName) {
         this.acc = acc;
         this.pass = pass;
         this.userName = userName;
     }
 
-    public Account getAcc() {
+    public Account_old getAcc() {
         return acc;
     }
 
