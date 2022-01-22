@@ -74,22 +74,12 @@ public class MenuUI extends JFrame implements ActionListener {
         jRadioButtonInventory.addActionListener(this);
         jRadioButtonExit.addActionListener(this);
         jButtonSubmit.addActionListener(this);
-        Connection connection=DBConnector.getConnect();
+
         //----------------------------------------------------------------
         //---------------------این رو نمیدونستم چجوری بزارم توی dao ------------------------------
-        String sqlS="Select balance,minbalance FROM public.account WHERE acountnumber=?";
-        try {
-            PreparedStatement statement=connection.prepareStatement(sqlS);
-            statement.setString(1,getAccountNumber());
-            ResultSet resultSet=statement.executeQuery();
-            while(resultSet.next()){
-                balance=resultSet.getDouble("balance");
-                minBalance=resultSet.getDouble("minbalance");
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
+        double[] doubles=userDao.getAccDao().selectAcc(accountNumber);
+        balance=doubles[0];
+        minBalance=doubles[1];
     }
 
     @Override
