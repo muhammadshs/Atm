@@ -1,6 +1,7 @@
 package UI;
 
 import DB.DBConnector;
+import dao.TransactionDao;
 import objects.Transaction;
 
 import javax.swing.*;
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class TransactionListUI extends JFrame {
@@ -36,29 +38,14 @@ public class TransactionListUI extends JFrame {
         defaultTableModel.addColumn("TYPE");
         defaultTableModel.addColumn("AMOUNT");
         defaultTableModel.addColumn("DATE");
-        String sql="SELECT type,amount,date FROM public.transaction WHERE accountnumber=?";
-        try {
-            PreparedStatement statement= DBConnector.getConnect().prepareStatement(sql);
-            statement.setString(1,accountNumber);
-            ResultSet resultSet=statement.executeQuery();
-            int num=0;
-            while (resultSet.next()){
-                num=++num;
-                Object[] o=new Object[4];
-                o[0]=num;
-                o[1]=resultSet.getString("type");
-                o[2]=resultSet.getDouble("amount");
-                o[3]=resultSet.getDate("date");
-                list.add(o);
-            }
+        TransactionDao transactionDao=new TransactionDao();
+            list=transactionDao.getTransaction(accountNumber);
 
 
             for (int i=0;i<list.size();i++){
                 defaultTableModel.addRow(list.get(i));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
         jtable=new JTable(defaultTableModel);
         jtable.setBounds(50,25,500,500);
 

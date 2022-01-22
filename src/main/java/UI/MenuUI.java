@@ -1,6 +1,7 @@
 package UI;
 
 import DB.DBConnector;
+import dao.MenuDao;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,8 +17,10 @@ public class MenuUI extends JFrame implements ActionListener {
    JTextField jTextFieldDeposit,jTextFieldWithdraw;
     JButton jButtonSubmit;
     double balance,minBalance;
+    MenuDao menuDao;
     public MenuUI(String accountNumber) throws HeadlessException {
         this.accountNumber=accountNumber;
+        menuDao = new MenuDao();
         setTitle("Menu");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
@@ -69,6 +72,8 @@ public class MenuUI extends JFrame implements ActionListener {
         jRadioButtonExit.addActionListener(this);
         jButtonSubmit.addActionListener(this);
         Connection connection=DBConnector.getConnect();
+        //----------------------------------------------------------------
+        //---------------------این رو نمیدونستم چجوری بزارم توی dao ------------------------------
         String sqlS="Select balance,minbalance FROM public.account WHERE acountnumber=?";
         try {
             PreparedStatement statement=connection.prepareStatement(sqlS);
@@ -111,8 +116,8 @@ public class MenuUI extends JFrame implements ActionListener {
                 double d=Double.parseDouble(jTextFieldWithdraw.getText().trim());
                 if(balance-minBalance>=d){
                     balance=balance-d;
-                    insertDB(balance);
-                    insertTransaction(TypeTransaction.withdraw,d);
+                    menuDao.insertDB(balance,accountNumber);
+                    menuDao.insertTransaction(TypeTransaction.withdraw,d,getAccountNumber());
                     InfoUI infoUI=new InfoUI(3,balance);
                     this.setVisible(false);
                 }
@@ -126,8 +131,8 @@ public class MenuUI extends JFrame implements ActionListener {
                 //System.out.println(d);
                 if(balance-minBalance>=d){
                     balance=balance+d;
-                    insertDB(balance);
-                    insertTransaction(TypeTransaction.deposit,d);
+                    menuDao.insertDB(balance,accountNumber);
+                    menuDao.insertTransaction(TypeTransaction.deposit,d,getAccountNumber());
                     InfoUI infoUI=new InfoUI(2,balance);
                     this.setVisible(false);
 
@@ -152,35 +157,6 @@ public class MenuUI extends JFrame implements ActionListener {
         this.accountNumber = accountNumber;
     }
 
-    public void insertDB(double d){
-        String sql="UPDATE public.account SET balance=? WHERE acountNumber=?";
-        PreparedStatement statement= null;
-        try {
-            statement = DBConnector.getConnect().prepareStatement(sql);
-            statement.setDouble(1,d);
-            statement.setString(2,getAccountNumber());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-    }
-    public void insertTransaction(TypeTransaction typeTransaction,double transactionAmount){
-        Date date=new Date();
-        java.sql.Date date1= new java.sql.Date(date.getTime());
-        String sql="INSERT INTO public.transaction (type,amount,date,accountnumber) VALUES (?,?,?,?)";
-        PreparedStatement statement= null;
-        try {
-            statement = DBConnector.getConnect().prepareStatement(sql);
-            statement.setString(1,typeTransaction.toString());
-            statement.setDouble(2,transactionAmount);
-            statement.setDate(3,date1);
-            statement.setString(4,getAccountNumber());
 
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
 }

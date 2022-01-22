@@ -1,6 +1,7 @@
 package UI;
 
 import DB.DBConnector;
+import dao.LoginDao;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class LoginUI extends JFrame implements ActionListener {
-
+    LoginDao dao;
     private static MenuUI menuUI=null;
     JLabel jLabelUserName,jLabelPassWord;
     JTextField jTextFieldName,jTextFieldPassWord;
@@ -19,6 +20,7 @@ public class LoginUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setBounds(600,200,400,400);
+        dao=new LoginDao();
         Container container=getContentPane();
         container.setBackground(Color.pink);
         init();
@@ -47,25 +49,16 @@ public class LoginUI extends JFrame implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        Connection connection= DBConnector.getConnect();
-        String sqlC="CREATE TABLE public.user IF NOT EXIST";
-        String sql="SELECT accountnumber FROM public.user WHERE (username=? and password=?)";
-        try {
-            Statement preparedStatement2=connection.prepareStatement(sqlC);
+                dao.createTableUser();
 
-            PreparedStatement preparedStatement=connection.prepareStatement(sql);
-            preparedStatement.setString(1,jTextFieldName.getText());
-            preparedStatement.setString(2,jTextFieldPassWord.getText());
-            ResultSet resultSet=preparedStatement.executeQuery();
-            while (resultSet.next()){
-                menuUI=new MenuUI(resultSet.getString("accountnumber"));
+                if (dao.checkLogin(jTextFieldName.getText(),jTextFieldPassWord.getText())){
+                    menuUI=new MenuUI(dao.getAccNumber());
 
-                getMenuUI().setVisible(true);
-                this.setVisible(false);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+                    getMenuUI().setVisible(true);
+                    this.setVisible(false);
+                }
+
+
     }
     public static MenuUI getMenuUI(){
         return menuUI;
