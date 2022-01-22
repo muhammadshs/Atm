@@ -1,16 +1,14 @@
 package UI;
 
-import DB.DBConnector;
-import dao.LoginDao;
+import dao.UserDao;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
 
 public class LoginUI extends JFrame implements ActionListener {
-    LoginDao dao;
+    UserDao dao;
     private static MenuUI menuUI=null;
     JLabel jLabelUserName,jLabelPassWord;
     JTextField jTextFieldName,jTextFieldPassWord;
@@ -20,7 +18,7 @@ public class LoginUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setBounds(600,200,400,400);
-        dao=new LoginDao();
+        dao=new UserDao();
         Container container=getContentPane();
         container.setBackground(Color.pink);
         init();
@@ -52,7 +50,7 @@ public class LoginUI extends JFrame implements ActionListener {
                 dao.createTableUser();
 
                 if (dao.checkLogin(jTextFieldName.getText(),jTextFieldPassWord.getText())){
-                    menuUI=new MenuUI(dao.getAccNumber());
+                    menuUI=new MenuUI(dao.getAccDao().getAccNumber());
 
                     getMenuUI().setVisible(true);
                     this.setVisible(false);

@@ -1,14 +1,15 @@
 package UI;
 
 import DB.DBConnector;
-import dao.MenuDao;
+import dao.AccDao;
+import dao.TransactionDao;
+import dao.UserDao;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import java.util.Date;
 
 public class MenuUI extends JFrame implements ActionListener {
     String accountNumber;
@@ -17,10 +18,12 @@ public class MenuUI extends JFrame implements ActionListener {
    JTextField jTextFieldDeposit,jTextFieldWithdraw;
     JButton jButtonSubmit;
     double balance,minBalance;
-    MenuDao menuDao;
+    TransactionDao transactionDao;
+    UserDao userDao;
     public MenuUI(String accountNumber) throws HeadlessException {
         this.accountNumber=accountNumber;
-        menuDao = new MenuDao();
+        userDao=new UserDao();
+        transactionDao = new TransactionDao();
         setTitle("Menu");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
@@ -116,8 +119,8 @@ public class MenuUI extends JFrame implements ActionListener {
                 double d=Double.parseDouble(jTextFieldWithdraw.getText().trim());
                 if(balance-minBalance>=d){
                     balance=balance-d;
-                    menuDao.insertDB(balance,accountNumber);
-                    menuDao.insertTransaction(TypeTransaction.withdraw,d,getAccountNumber());
+                    userDao.getAccDao().insertDB(balance,accountNumber);
+                    transactionDao.insertTransaction(TypeTransaction.withdraw,d,getAccountNumber());
                     InfoUI infoUI=new InfoUI(3,balance);
                     this.setVisible(false);
                 }
@@ -131,8 +134,8 @@ public class MenuUI extends JFrame implements ActionListener {
                 //System.out.println(d);
                 if(balance-minBalance>=d){
                     balance=balance+d;
-                    menuDao.insertDB(balance,accountNumber);
-                    menuDao.insertTransaction(TypeTransaction.deposit,d,getAccountNumber());
+                    userDao.getAccDao().insertDB(balance,accountNumber);
+                    transactionDao.insertTransaction(TypeTransaction.deposit,d,getAccountNumber());
                     InfoUI infoUI=new InfoUI(2,balance);
                     this.setVisible(false);
 
