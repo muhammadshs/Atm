@@ -1,17 +1,18 @@
 package dao;
 
-import DB.DBConnector;
-
 import java.sql.*;
 
 public class AccDao {
     String accNumber;
-
+    Connection connection;
+    public AccDao(){
+        connection=DBConnector.getConnect();
+    }
     public void insertDB(double d, String accNumber) {
         String sql = "UPDATE public.account SET balance=? WHERE acountNumber=?";
         PreparedStatement statement = null;
         try {
-            statement = DBConnector.getConnect().prepareStatement(sql);
+            statement = connection.prepareStatement(sql);
             statement.setDouble(1, d);
             statement.setString(2, accNumber);
             statement.executeUpdate();
@@ -23,31 +24,41 @@ public class AccDao {
 
 
     public static void createTableAcc() {
-        String sql = "create table IF NOT EXISTS schemas.public.account  \n" +
-                "(\n" +
-                "    id           serial\n" +
-                "        primary key,\n" +
-                "    acountnumber char(30)         not null\n" +
-                "        constraint niu\n" +
-                "            unique,\n" +
-                "    balance      double precision not null,\n" +
-                "    minbalance   double precision not null\n" +
-                ");\n" +
-                "\n" +
-                "alter table account\n" +
-                "    owner to postgres;";
+        String sqlS="SELECT 1 FROM public.account ";
+        String sql = """
+    create table account
+    (
+        id           serial
+            primary key,
+        acountnumber char(30)         not null
+            constraint niu
+                unique,
+        balance      double precision not null,
+        minbalance   double precision not null
+    );
+    
+    alter table account
+        owner to postgres;
+""";
+
         try {
-            Statement statement = DBConnector.getConnect().createStatement();
-            statement.executeUpdate(sql);
+            Statement statement=DBConnector.getConnect().createStatement();
+            ResultSet resultSet=statement.executeQuery(sqlS);
+            if(!resultSet.next()){
+                Statement statement2 = DBConnector.getConnect().createStatement();
+                statement2.executeUpdate(sql);
+                insertFirstAcc();
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        insertFirstAcc();
+
     }
 
     //--------------------------------------------------------------------
     public static void insertFirstAcc() {
-        String sql = "INSERT INTO user (acountnumber,balance,minbalance) VALUES ('0023577541',10000,100)";
+        String sql = "INSERT INTO public.user (acountnumber,balance,minbalance) VALUES ('0023577541',10000,100)";
         try {
             Statement statement = DBConnector.getConnect().createStatement();
             statement.executeUpdate(sql);

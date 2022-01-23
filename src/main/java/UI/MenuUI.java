@@ -1,7 +1,5 @@
 package UI;
 
-import DB.DBConnector;
-import dao.AccDao;
 import dao.TransactionDao;
 import dao.UserDao;
 
@@ -9,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
 
 public class MenuUI extends JFrame implements ActionListener {
     String accountNumber;

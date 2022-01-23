@@ -1,11 +1,16 @@
 package dao;
 
-import DB.DBConnector;
-
 import java.sql.*;
 
 public class UserDao {
-    AccDao accDao=new AccDao();
+
+    AccDao accDao=null;
+
+    public UserDao() {
+        this.accDao = new AccDao();
+    }
+
+
     public boolean checkLogin(String name,String passWord){
         String sql="SELECT accountnumber FROM public.user WHERE (username=? and password=?)";
         Connection connection= DBConnector.getConnect();
@@ -30,28 +35,37 @@ public class UserDao {
     public void createTableUser(){
         createDB();
         AccDao.createTableAcc();
-        String sql="CREATE TABLE IF NOT EXISTS schemas.public.user \n" +
-                "(\n" +
-                "    id            integer  not null\n" +
-                "        primary key,\n" +
-                "    username      char(30) not null,\n" +
-                "    password      char(30) not null,\n" +
-                "    accountnumber char(40) not null\n" +
-                "        constraint um\n" +
-                "            unique\n" +
-                "        constraint accountnumber\n" +
-                "            references account (acountnumber)\n" +
-                ");\n" +
-                "\n" +
-                "alter table \"user\"\n" +
-                "    owner to postgres; ";
+        String sqlS="SELECT 1 FROM public.user;";
+        String sql= """
+                       create table "user"
+                       (
+                           id            integer  not null
+                               primary key,
+                           username      char(30) not null,
+                           password      char(30) not null,
+                           accountnumber char(40) not null
+                               constraint um
+                                   unique
+                               constraint accountnumber
+                                   references account (acountnumber)
+                       );
+                       
+                       alter table "user"
+                           owner to postgres;
+                        
+                    """;
         try {
-            Statement statement=DBConnector.getConnect().createStatement();
-            statement.executeUpdate(sql);
+            Statement statementS=DBConnector.getConnect().createStatement();
+            ResultSet resultSet=statementS.executeQuery(sqlS);
+            if(!resultSet.next()) {
+                Statement statement = DBConnector.getConnect().createStatement();
+                statement.executeUpdate(sql);
+                insertFirstUser();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        insertFirstUser();
+
     }
     //------------------------------------------------------------------------
     public void insertFirstUser(){
@@ -68,10 +82,16 @@ public class UserDao {
     //-----------------------------------------------------------------------
 
     public void createDB(){
-        String sql="CREATE DATABASE IF NOT EXISTS atm_db ;";
+        String sqlS="SELECT 1 FROM pg_database WHERE datname='atm_db' ";
+        String sql="CREATE DATABASE atm_db";
         try {
             Statement statement=DBConnector.getConnect().createStatement();
-            statement.executeUpdate(sql);
+            //
+            ResultSet resultSet=statement.executeQuery(sqlS);
+            if (!resultSet.next()){
+                Statement statement2=DBConnector.getConnect().createStatement();
+                statement2.executeUpdate(sql);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

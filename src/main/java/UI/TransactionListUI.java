@@ -1,22 +1,17 @@
 package UI;
 
-import DB.DBConnector;
 import dao.TransactionDao;
 import objects.Transaction;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 public class TransactionListUI extends JFrame {
     JTable jtable;
     String accountNumber;
-    ArrayList<Object[]> list;
+    ArrayList<Transaction> list;
     public TransactionListUI(String accountNumber) throws HeadlessException {
         list=new ArrayList<>();
         this.accountNumber=accountNumber;
@@ -43,7 +38,7 @@ public class TransactionListUI extends JFrame {
 
 
             for (int i=0;i<list.size();i++){
-                defaultTableModel.addRow(list.get(i));
+                defaultTableModel.addRow(new Object[]{list.get(i).getId(),list.get(i).getTypeTransaction(),list.get(i).getTransactionAmount(),list.get(i).getTransactionDate()});
             }
 
         jtable=new JTable(defaultTableModel);
