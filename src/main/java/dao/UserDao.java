@@ -6,12 +6,14 @@ public class UserDao {
 
     AccDao accDao=null;
     private static Connection connectionS;
+
     public UserDao() {
         this.accDao = new AccDao();
-        createTableUser();
+
     }
     static {
         connectionS = DBConnector.getConnect();
+        createTableUser();
     }
 
     public boolean checkLogin(String name,String passWord){
@@ -36,7 +38,7 @@ public class UserDao {
         return false;
     }
     //--------------------------------------------------------------------
-    private void createTableUser(){
+    private static void createTableUser(){
         createDB();
         AccDao.createTableAcc();
         String sqlS="SELECT 1 FROM public.user;";
@@ -72,7 +74,7 @@ public class UserDao {
 
     }
     //------------------------------------------------------------------------
-    public void insertFirstUser(){
+    private static void insertFirstUser(){
         String sql="INSERT INTO user (username,password,accountnumber) VALUES ('shah','1379','0023577541')";
         try {
             Statement statement=connectionS.createStatement();
@@ -85,7 +87,7 @@ public class UserDao {
 
     //-----------------------------------------------------------------------
 
-    private void createDB(){
+    private static void createDB(){
         String sqlS="SELECT 1 FROM pg_database WHERE datname='atm_db' ";
         String sql="CREATE DATABASE atm_db";
         try {
