@@ -5,17 +5,21 @@ import java.sql.*;
 public class UserDao {
 
     AccDao accDao=null;
-
+    private static Connection connectionS;
     public UserDao() {
         this.accDao = new AccDao();
+        createTableUser();
+    }
+    static {
+        connectionS = DBConnector.getConnect();
     }
 
-
     public boolean checkLogin(String name,String passWord){
+
         String sql="SELECT accountnumber FROM public.user WHERE (username=? and password=?)";
-        Connection connection= DBConnector.getConnect();
+
         try {
-            PreparedStatement preparedStatement=connection.prepareStatement(sql);
+            PreparedStatement preparedStatement=connectionS.prepareStatement(sql);
             preparedStatement.setString(1,name);
             preparedStatement.setString(2,passWord);
             ResultSet resultSet=preparedStatement.executeQuery();
@@ -32,7 +36,7 @@ public class UserDao {
         return false;
     }
     //--------------------------------------------------------------------
-    public void createTableUser(){
+    private void createTableUser(){
         createDB();
         AccDao.createTableAcc();
         String sqlS="SELECT 1 FROM public.user;";
@@ -55,7 +59,7 @@ public class UserDao {
                         
                     """;
         try {
-            Statement statementS=DBConnector.getConnect().createStatement();
+            Statement statementS=connectionS.createStatement();
             ResultSet resultSet=statementS.executeQuery(sqlS);
             if(!resultSet.next()) {
                 Statement statement = DBConnector.getConnect().createStatement();
@@ -71,7 +75,7 @@ public class UserDao {
     public void insertFirstUser(){
         String sql="INSERT INTO user (username,password,accountnumber) VALUES ('shah','1379','0023577541')";
         try {
-            Statement statement=DBConnector.getConnect().createStatement();
+            Statement statement=connectionS.createStatement();
             statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,11 +85,11 @@ public class UserDao {
 
     //-----------------------------------------------------------------------
 
-    public void createDB(){
+    private void createDB(){
         String sqlS="SELECT 1 FROM pg_database WHERE datname='atm_db' ";
         String sql="CREATE DATABASE atm_db";
         try {
-            Statement statement=DBConnector.getConnect().createStatement();
+            Statement statement=connectionS.createStatement();
             //
             ResultSet resultSet=statement.executeQuery(sqlS);
             if (!resultSet.next()){

@@ -2,6 +2,7 @@ package UI;
 
 import dao.TransactionDao;
 import dao.UserDao;
+import input.Validation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -103,7 +104,7 @@ public class MenuUI extends JFrame implements ActionListener {
         }
         if (e.getSource()==jButtonSubmit){
             if(jRadioButtonWithdraw.isSelected()){
-                double d=Double.parseDouble(jTextFieldWithdraw.getText().trim());
+                double d= Double.parseDouble(jTextFieldWithdraw.getText().trim());
                 if(balance-minBalance>=d){
                     balance=balance-d;
                     userDao.getAccDao().insertDB(balance,accountNumber);

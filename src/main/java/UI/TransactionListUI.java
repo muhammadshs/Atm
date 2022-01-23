@@ -1,7 +1,7 @@
 package UI;
 
 import dao.TransactionDao;
-import objects.Transaction;
+import model.Transaction;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

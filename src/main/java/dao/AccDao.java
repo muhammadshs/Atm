@@ -4,8 +4,8 @@ import java.sql.*;
 
 public class AccDao {
     String accNumber;
-    Connection connection;
-    public AccDao(){
+    private static Connection connection;
+    static {
         connection=DBConnector.getConnect();
     }
     public void insertDB(double d, String accNumber) {
@@ -42,7 +42,7 @@ public class AccDao {
 """;
 
         try {
-            Statement statement=DBConnector.getConnect().createStatement();
+            Statement statement=connection.createStatement();
             ResultSet resultSet=statement.executeQuery(sqlS);
             if(!resultSet.next()){
                 Statement statement2 = DBConnector.getConnect().createStatement();
@@ -60,7 +60,7 @@ public class AccDao {
     public static void insertFirstAcc() {
         String sql = "INSERT INTO public.user (acountnumber,balance,minbalance) VALUES ('0023577541',10000,100)";
         try {
-            Statement statement = DBConnector.getConnect().createStatement();
+            Statement statement = connection.createStatement();
             statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -79,10 +79,11 @@ public class AccDao {
 
     //-------------------------------------------------------
     public double[] selectAcc(String accNumber) {
+        createTableAcc();
         String sqlS = "Select balance,minbalance FROM public.account WHERE acountnumber=?";
         double[] d = new double[2];
         try {
-            Connection connection = DBConnector.getConnect();
+
             PreparedStatement statement = connection.prepareStatement(sqlS);
             statement.setString(1, accNumber);
             ResultSet resultSet = statement.executeQuery();

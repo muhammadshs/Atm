@@ -47,7 +47,7 @@ public class LoginUI extends JFrame implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-                dao.createTableUser();
+
 
                 if (dao.checkLogin(jTextFieldName.getText(),jTextFieldPassWord.getText())){
                     menuUI=new MenuUI(dao.getAccDao().getAccNumber());

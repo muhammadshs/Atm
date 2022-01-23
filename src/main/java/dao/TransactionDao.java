@@ -1,8 +1,9 @@
 package dao;
 
 import UI.TypeTransaction;
-import objects.Transaction;
+import model.Transaction;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,11 +11,15 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class TransactionDao {
+    private static Connection connection;
+    static {
+        connection=DBConnector.getConnect();
+    }
     public static ArrayList<Transaction> getTransaction(String accNumber) {
         ArrayList<Transaction> list=new ArrayList<>();
         String sql = "SELECT type,amount,date FROM public.transaction WHERE accountnumber=?";
         try {
-            PreparedStatement statement = DBConnector.getConnect().prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, accNumber);
             ResultSet resultSet = statement.executeQuery();
 
@@ -41,7 +46,7 @@ public class TransactionDao {
         String sql="INSERT INTO public.transaction (type,amount,date,accountnumber) VALUES (?,?,?,?)";
         PreparedStatement statement= null;
         try {
-            statement = DBConnector.getConnect().prepareStatement(sql);
+            statement = connection.prepareStatement(sql);
             statement.setString(1,typeTransaction.toString());
             statement.setDouble(2,transactionAmount);
             statement.setDate(3,date1);
