@@ -12,8 +12,9 @@ public class UserDao {
 
     }
     static {
-        connectionS = DBConnector.getConnect();
         createTableUser();
+        connectionS = DBConnector.getConnect();
+
     }
 
     public boolean checkLogin(String name,String passWord){
@@ -60,7 +61,7 @@ public class UserDao {
                         
                     """;
         try {
-            Statement statementS=connectionS.createStatement();
+            Statement statementS=DBConnector.getConnect().createStatement();
             ResultSet resultSet=statementS.executeQuery(sqlS);
             if(!resultSet.next()) {
                 Statement statement = DBConnector.getConnect().createStatement();
@@ -76,7 +77,7 @@ public class UserDao {
     private static void insertFirstUser(){
         String sql="INSERT INTO user (username,password,accountnumber) VALUES ('shah','1379','0023577541')";
         try {
-            Statement statement=connectionS.createStatement();
+            Statement statement=DBConnector.getConnect().createStatement();
             statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -90,7 +91,7 @@ public class UserDao {
         String sqlS="SELECT 1 FROM pg_database WHERE datname='atm_db' ";
         String sql="CREATE DATABASE atm_db";
         try {
-            Statement statement=connectionS.createStatement();
+            Statement statement=DBConnector.getConnect().createStatement();
             //
             ResultSet resultSet=statement.executeQuery(sqlS);
             if (!resultSet.next()){

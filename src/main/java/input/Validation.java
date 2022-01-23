@@ -3,15 +3,19 @@ package input;
 import exp.InvalidInputException;
 
 public class Validation {
-    public static int valInt(Object value){
-        int num;
-        try {
-            num=(int) value;
-        }
-        catch (Exception e){
-            throw new InvalidInputException();
-        }
-        return num;
+    public static int valInt(String value){
+
+            char[] ch = value.toCharArray();
+            for (char cha : ch) {
+                try {
+                    int a = (int) cha;
+                } catch (Exception e) {
+                    return -1;
+                }
+
+            }
+            return Integer.parseInt(value);
+
     }
     public static String valStr(Object value){
         String val;
