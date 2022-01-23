@@ -7,6 +7,7 @@ public class AccDao {
     private static Connection connection;
     static {
         connection=DBConnector.getConnect();
+        createTableAcc();
     }
     public void insertDB(double d, String accNumber) {
         String sql = "UPDATE public.account SET balance=? WHERE acountNumber=?";
@@ -23,7 +24,7 @@ public class AccDao {
     }
 
 
-    public static void createTableAcc() {
+    private static void createTableAcc() {
         String sqlS="SELECT 1 FROM public.account ";
         String sql = """
     create table account
@@ -57,7 +58,7 @@ public class AccDao {
     }
 
     //--------------------------------------------------------------------
-    public static void insertFirstAcc() {
+    private static void insertFirstAcc() {
         String sql = "INSERT INTO public.user (acountnumber,balance,minbalance) VALUES ('0023577541',10000,100)";
         try {
             Statement statement = connection.createStatement();

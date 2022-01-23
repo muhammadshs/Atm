@@ -40,7 +40,6 @@ public class UserDao {
     //--------------------------------------------------------------------
     private static void createTableUser(){
         createDB();
-        AccDao.createTableAcc();
         String sqlS="SELECT 1 FROM public.user;";
         String sql= """
                        create table "user"
