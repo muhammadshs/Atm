@@ -7,7 +7,7 @@ public class AccDao {
     private static Connection connection;
     static {
         connection=DBConnector.getConnect();
-        createTableAcc();
+
     }
     public void insertDB(double d, String accNumber) {
         String sql = "UPDATE public.account SET balance=? WHERE acountNumber=?";
@@ -24,49 +24,7 @@ public class AccDao {
     }
 
 
-    private static void createTableAcc() {
-        String sqlS="SELECT 1 FROM public.account ";
-        String sql = """
-    create table account
-    (
-        id           serial
-            primary key,
-        acountnumber char(30)         not null
-            constraint niu
-                unique,
-        balance      double precision not null,
-        minbalance   double precision not null
-    );
-    
-    alter table account
-        owner to postgres;
-""";
 
-        try {
-            Statement statement=connection.createStatement();
-            ResultSet resultSet=statement.executeQuery(sqlS);
-            if(!resultSet.next()){
-                Statement statement2 = DBConnector.getConnect().createStatement();
-                statement2.executeUpdate(sql);
-                insertFirstAcc();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    //--------------------------------------------------------------------
-    private static void insertFirstAcc() {
-        String sql = "INSERT INTO public.user (acountnumber,balance,minbalance) VALUES ('0023577541',10000,100)";
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     //-----------------------------------------------------------------------
     public String getAccNumber() {
@@ -80,7 +38,7 @@ public class AccDao {
 
     //-------------------------------------------------------
     public double[] selectAcc(String accNumber) {
-        createTableAcc();
+
         String sqlS = "Select balance,minbalance FROM public.account WHERE acountnumber=?";
         double[] d = new double[2];
         try {

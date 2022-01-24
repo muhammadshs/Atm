@@ -12,7 +12,7 @@ public class UserDao {
 
     }
     static {
-        createTableUser();
+
         connectionS = DBConnector.getConnect();
 
     }
@@ -39,69 +39,14 @@ public class UserDao {
         return false;
     }
     //--------------------------------------------------------------------
-    private static void createTableUser(){
-        createDB();
-        String sqlS="SELECT 1 FROM public.user;";
-        String sql= """
-                       create table "user"
-                       (
-                           id            integer  not null
-                               primary key,
-                           username      char(30) not null,
-                           password      char(30) not null,
-                           accountnumber char(40) not null
-                               constraint um
-                                   unique
-                               constraint accountnumber
-                                   references account (acountnumber)
-                       );
-                       
-                       alter table "user"
-                           owner to postgres;
-                        
-                    """;
-        try {
-            Statement statementS=DBConnector.getConnect().createStatement();
-            ResultSet resultSet=statementS.executeQuery(sqlS);
-            if(!resultSet.next()) {
-                Statement statement = DBConnector.getConnect().createStatement();
-                statement.executeUpdate(sql);
-                insertFirstUser();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-    }
     //------------------------------------------------------------------------
-    private static void insertFirstUser(){
-        String sql="INSERT INTO user (username,password,accountnumber) VALUES ('shah','1379','0023577541')";
-        try {
-            Statement statement=DBConnector.getConnect().createStatement();
-            statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+
     //-------------------------------------------------------------------------
 
     //-----------------------------------------------------------------------
 
-    private static void createDB(){
-        String sqlS="SELECT 1 FROM pg_database WHERE datname='atm_db' ";
-        String sql="CREATE DATABASE atm_db";
-        try {
-            Statement statement=DBConnector.getConnect().createStatement();
-            //
-            ResultSet resultSet=statement.executeQuery(sqlS);
-            if (!resultSet.next()){
-                Statement statement2=DBConnector.getConnect().createStatement();
-                statement2.executeUpdate(sql);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public AccDao getAccDao() {
         return accDao;

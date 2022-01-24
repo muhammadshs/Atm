@@ -1,13 +1,11 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DBConnector {
     private static final DBConnector dbConnector = new DBConnector();
     private static Connection conn = null;
-
+    private static Connection postConn=null;
     private DBConnector() {
     }
 
@@ -20,6 +18,7 @@ public class DBConnector {
     static {
         try {
             conn = DriverManager.getConnection(DBConfig.DBURL, DBConfig.DBUSER, DBConfig.DBPASS);
+            postConn=DriverManager.getConnection(DBConfig.POSTURL,DBConfig.DBUSER,DBConfig.DBPASS);
 
         } catch (SQLException e) {
             System.err.println("cant connect to DB ");
@@ -30,6 +29,9 @@ public class DBConnector {
     public static Connection getConnect() {
 
         return conn;
+    }
+    public static Connection getPostConn(){
+        return postConn;
     }
 
 }
