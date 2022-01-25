@@ -50,8 +50,7 @@ public class LoginUI extends JFrame implements ActionListener {
 
 
                 if (dao.checkLogin(jTextFieldName.getText(),jTextFieldPassWord.getText())){
-                    menuUI=new MenuUI(dao.getAccDao().getAccNumber());
-
+                    menuUI=new MenuUI(dao.getAccNumber());
                     getMenuUI().setVisible(true);
                     this.setVisible(false);
                 }
@@ -61,6 +60,7 @@ public class LoginUI extends JFrame implements ActionListener {
     public static MenuUI getMenuUI(){
         return menuUI;
     }
+
     public static void setVisiblityMenu(boolean visiblityMenu){
         menuUI.setVisible(visiblityMenu);
 

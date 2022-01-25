@@ -1,5 +1,6 @@
 package UI;
 
+import dao.AccDao;
 import dao.TransactionDao;
 import dao.UserDao;
 import enum_pac.PageEnum;
@@ -19,11 +20,11 @@ public class MenuUI extends JFrame implements ActionListener {
     JButton jButtonSubmit;
     double balance,minBalance;
     TransactionDao transactionDao;
-    UserDao userDao;
+    AccDao accDao;
     private static InfoUI infoUI;
     public MenuUI(String accountNumber) throws HeadlessException {
         this.accountNumber=accountNumber;
-        userDao=new UserDao();
+        accDao=new AccDao(accountNumber);
         transactionDao = new TransactionDao();
         setTitle("enum_pac.Menu");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -78,7 +79,7 @@ public class MenuUI extends JFrame implements ActionListener {
 
         //----------------------------------------------------------------
         //---------------------این رو نمیدونستم چجوری بزارم توی dao ------------------------------
-        double[] doubles=userDao.getAccDao().selectAcc(accountNumber);
+        double[] doubles=accDao.selectAcc(accountNumber);
         balance=doubles[0];
         minBalance=doubles[1];
     }
@@ -91,6 +92,7 @@ public class MenuUI extends JFrame implements ActionListener {
             jTextFieldWithdraw.setVisible(true);
             jTextFieldDeposit.setVisible(false);
             jRadioButtonDeposit.setBounds(100,100,200,35);
+            jTextFieldDeposit.setText("");
 
         }
         if(jRadioButtonDeposit.isSelected()){
@@ -98,19 +100,22 @@ public class MenuUI extends JFrame implements ActionListener {
             jTextFieldDeposit.setVisible(true);
             jTextFieldWithdraw.setVisible(false);
             jRadioButtonWithdraw.setBounds(100,150,200,35);
+            jTextFieldWithdraw.setText("");
         }
         if (jRadioButtonInventory.isSelected()||jRadioButtonExit.isSelected()||jRadioButtonLast10Transaction.isSelected()){
             jTextFieldWithdraw.setVisible(false);
             jRadioButtonWithdraw.setBounds(100,150,200,35);
             jTextFieldDeposit.setVisible(false);
             jRadioButtonDeposit.setBounds(100,100,200,35);
+            jTextFieldWithdraw.setText("");
+            jTextFieldDeposit.setText("");
         }
         if (e.getSource()==jButtonSubmit){
             if(jRadioButtonWithdraw.isSelected()){
                 double d= Double.parseDouble(jTextFieldWithdraw.getText().trim());
                 if(balance-minBalance>=d){
                     balance=balance-d;
-                    userDao.getAccDao().insertDB(balance,accountNumber);
+                    accDao.insertDB(balance,accountNumber);
                     transactionDao.insertTransaction(TypeTransaction.withdraw,d,getAccountNumber());
                      infoUI=new InfoUI(3,balance);
                     Back.setBack(PageEnum.menu);
@@ -127,7 +132,7 @@ public class MenuUI extends JFrame implements ActionListener {
                 //System.out.println(d);
                 if(balance-minBalance>=d){
                     balance=balance+d;
-                    userDao.getAccDao().insertDB(balance,accountNumber);
+                    accDao.insertDB(balance,accountNumber);
                     transactionDao.insertTransaction(TypeTransaction.deposit,d,getAccountNumber());
                     infoUI=new InfoUI(2,balance);
                     Back.setBack(PageEnum.menu);

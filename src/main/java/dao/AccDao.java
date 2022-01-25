@@ -9,6 +9,9 @@ public class AccDao {
         connection=DBConnector.getConnect();
 
     }
+    public AccDao(String accNumber){
+        this.accNumber=accNumber;
+    }
     public void insertDB(double d, String accNumber) {
         String sql = "UPDATE public.account SET balance=? WHERE accountNumber=?";
         PreparedStatement statement = null;
@@ -27,14 +30,14 @@ public class AccDao {
 
 
     //-----------------------------------------------------------------------
-    public String getAccNumber() {
+    /*public String getAccNumber() {
         return accNumber;
-    }
+    }*/
     //-------------------------------------------------------------------------
 
-    public void setAccNumber(String accNumber) {
+   /* public void setAccNumber(String accNumber) {
         this.accNumber = accNumber;
-    }
+    }*/
 
     //-------------------------------------------------------
     public double[] selectAcc(String accNumber) {

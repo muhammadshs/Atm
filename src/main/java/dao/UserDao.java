@@ -4,11 +4,11 @@ import java.sql.*;
 
 public class UserDao {
 
-    AccDao accDao=null;
-    private static Connection connectionS;
 
+    private static Connection connectionS;
+    private String accNumber;
     public UserDao() {
-        this.accDao = new AccDao();
+
 
     }
     static {
@@ -27,7 +27,7 @@ public class UserDao {
             preparedStatement.setString(2,passWord);
             ResultSet resultSet=preparedStatement.executeQuery();
             while (resultSet.next()){
-                accDao.setAccNumber(resultSet.getString("accountnumber"));
+                accNumber=resultSet.getString("accountnumber");
                 return true;
 
 
@@ -46,9 +46,12 @@ public class UserDao {
 
     //-----------------------------------------------------------------------
 
-
-
-    public AccDao getAccDao() {
-        return accDao;
+    public String getAccNumber() {
+        return accNumber;
     }
+
+
+    //public AccDao getAccDao() {
+     //   return accDao;
+    //}
 }
