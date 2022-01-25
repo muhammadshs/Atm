@@ -1,3 +1,5 @@
+package input;
+
 public class Util {
     public static boolean checkNumeric (String message) {
         char[] ch = message.toCharArray();

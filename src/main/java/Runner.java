@@ -1,4 +1,5 @@
 import UI.LoginUI;
+import dao.DBCreate;
 import dao.DBTCreate;
 
 import java.sql.*;
@@ -12,7 +13,7 @@ public class Runner {
 
 
         //MenuUI menuUI=new MenuUI();
-        DBTCreate dbtCreate=new DBTCreate();
+        DBCreate dbCreate=new DBCreate();
         LoginUI loginUI=new LoginUI();
        /* model.User[] users = new model.User[1];
         users[0] = new model.User(new Account_old("5000", 200, 100), 1234, "niush");
@@ -26,11 +27,11 @@ public class Runner {
         for (model.User user : users) {
             if (userName.equals(user.getUserName()) && password == user.getPass()) {
                 System.out.println("********* welcome *******");
-                System.out.println("1-" + Menu.Inventory);
-                System.out.println("2-" + Menu.Withdraw);
-                System.out.println("3-" + Menu.Deposit);
-                System.out.println("4-" + Menu.model.Transaction);
-                System.out.println("5-" + Menu.Exit);
+                System.out.println("1-" + enum_pac.Menu.Inventory);
+                System.out.println("2-" + enum_pac.Menu.Withdraw);
+                System.out.println("3-" + enum_pac.Menu.Deposit);
+                System.out.println("4-" + enum_pac.Menu.model.Transaction);
+                System.out.println("5-" + enum_pac.Menu.Exit);
                 int a = scanner.nextInt();
                 switch (a) {
                     case 1:
@@ -41,7 +42,7 @@ public class Runner {
                         System.out.println("Decrease Amount: ");
                         double withDraw = scanner.nextDouble();
                         user.getAcc().withDraw(withDraw);
-                        user.getAcc().setTransaction(new model.Transaction(UI.TypeTransaction.withdraw,withDraw, LocalDateTime.now()));
+                        user.getAcc().setTransaction(new model.Transaction(enum_pac.TypeTransaction.withdraw,withDraw, LocalDateTime.now()));
                         System.out.println("******************");
                         System.out.println("Your Balance:"+user.getAcc().getBalance());
                         break;
@@ -49,7 +50,7 @@ public class Runner {
                         System.out.println("Increase Amount:");
                         double dep = scanner.nextDouble();
                         user.getAcc().deposit(dep);
-                        user.getAcc().setTransaction(new model.Transaction(UI.TypeTransaction.deposit,dep,LocalDateTime.now()));
+                        user.getAcc().setTransaction(new model.Transaction(enum_pac.TypeTransaction.deposit,dep,LocalDateTime.now()));
                         System.out.println("******************");
                         System.out.println("Your Balance:"+user.getAcc().getBalance());
                         break;

@@ -11,47 +11,42 @@ public class DBTCreate {
         connection=DBConnector.getConnect();
     }
     public DBTCreate() {
-        String sqlS="SELECT 1 FROM pg_database WHERE datname='atm_db' ";
-        String sql="CREATE DATABASE atm_db";
-        try {
-            Statement statement=DBConnector.getPostConn().createStatement();
-            //
-            ResultSet resultSet=statement.executeQuery(sqlS);
-            if (!resultSet.next()){
-                Statement statement2=DBConnector.getPostConn().createStatement();
-                statement2.executeUpdate(sql);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
         createTableAcc();
         createTableUser();
+        createTableTransaction();
     }
 
-    private static void createTableUser(){
+    private  void createTableUser(){
 
-        String sqlS="SELECT 1 FROM public.user;";
-        String sql= """
-                       create table "user"
-                       (
-                           id            integer  not null
-                               primary key,
-                           username      char(30) not null,
-                           password      char(30) not null,
-                           accountnumber char(40) not null
-                               constraint um
-                                   unique
-                               constraint accountnumber
-                                   references account (acountnumber)
+        String sqlS= """
+                    SELECT 1 FROM information_schema.tables WHERE 
+                           ( table_schema = 'public'
+                       AND    table_name   = 'user'
                        );
-                       
-                       alter table "user"
-                           owner to postgres;
-                        
+                    """;
+        String sql= """
+                      CREATE TABLE public.user
+                             (
+                                 id serial NOT NULL,
+                                 username character(30) NOT NULL,
+                                 password character(30) NOT NULL,
+                                 accountnumber character(30) NOT NULL,
+                                 PRIMARY KEY (id),
+                                 CONSTRAINT acck FOREIGN KEY (accountnumber)
+                                     REFERENCES public.account (accountnumber) MATCH SIMPLE
+                                     ON UPDATE NO ACTION
+                                     ON DELETE NO ACTION
+                                     NOT VALID
+                             );
+                             
+                             ALTER TABLE IF EXISTS public."user"
+                                 OWNER to postgres;
                     """;
         try {
             Statement statementS=connection.createStatement();
             ResultSet resultSet=statementS.executeQuery(sqlS);
+            //System.out.println(resultSet.next());
             if(!resultSet.next()) {
                 Statement statement =connection.createStatement();
                 statement.executeUpdate(sql);
@@ -62,8 +57,9 @@ public class DBTCreate {
         }
 
     }
-    private static void insertFirstUser(){
-        String sql="INSERT INTO user (username,password,accountnumber) VALUES ('shah','1379','0023577541')";
+    //-------------------------------------------------------------------------------------
+    private  void insertFirstUser(){
+        String sql="INSERT INTO public.user(username,password,accountnumber) VALUES ('shah','1379','0023577541')";
         try {
             Statement statement=connection.createStatement();
             statement.executeUpdate(sql);
@@ -71,14 +67,20 @@ public class DBTCreate {
             e.printStackTrace();
         }
     }
-    private static void createTableAcc() {
-        String sqlS="SELECT 1 FROM public.account ";
+    //-------------------------------------------------------------------------------------
+    private  void createTableAcc() {
+        String sqlS= """
+                    SELECT 1 FROM information_schema.tables WHERE 
+                           ( table_schema = 'public'
+                       AND    table_name   = 'account'
+                       );
+                    """;
         String sql = """
     create table account
     (
         id           serial
             primary key,
-        acountnumber char(30)         not null
+        accountnumber char(30)         not null
             constraint niu
                 unique,
         balance      double precision not null,
@@ -92,6 +94,7 @@ public class DBTCreate {
         try {
             Statement statement=connection.createStatement();
             ResultSet resultSet=statement.executeQuery(sqlS);
+            //System.out.println(resultSet.next());
             if(!resultSet.next()){
                 Statement statement2 = DBConnector.getConnect().createStatement();
                 statement2.executeUpdate(sql);
@@ -105,8 +108,8 @@ public class DBTCreate {
     }
 
     //--------------------------------------------------------------------
-    private static void insertFirstAcc() {
-        String sql = "INSERT INTO public.user (acountnumber,balance,minbalance) VALUES ('0023577541',10000,100)";
+    private void insertFirstAcc() {
+        String sql = "INSERT INTO public.account(accountnumber,balance,minbalance) VALUES ('0023577541',10000,100)";
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sql);
@@ -114,4 +117,45 @@ public class DBTCreate {
             e.printStackTrace();
         }
     }
+    //--------------------------------------------------------------------
+    private  void createTableTransaction() {
+        String sqlS= """
+                    SELECT 1 FROM information_schema.tables WHERE 
+                           ( table_schema = 'public'
+                       AND    table_name   = 'transaction'
+                       );
+                    """;
+        String sql = """
+    CREATE TABLE public.transaction
+                          (
+                              id serial NOT NULL,
+                              type character varying(40) NOT NULL,
+                              amount double precision NOT NULL,
+                              date date NOT NULL,
+                              account_number character(30) NOT NULL,
+                              PRIMARY KEY (id)
+                          );
+                          
+                          ALTER TABLE IF EXISTS public.transaction
+                              OWNER to postgres;
+""";
+
+        try {
+            Statement statement=connection.createStatement();
+            ResultSet resultSet=statement.executeQuery(sqlS);
+            //System.out.println(resultSet.next());
+            if(!resultSet.next()){
+                Statement statement2 = DBConnector.getConnect().createStatement();
+                statement2.executeUpdate(sql);
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    //--------------------------------------------------------------------
+
 }

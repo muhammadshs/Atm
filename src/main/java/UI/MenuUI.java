@@ -2,7 +2,7 @@ package UI;
 
 import dao.TransactionDao;
 import dao.UserDao;
-import input.Validation;
+import enum_pac.TypeTransaction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +22,7 @@ public class MenuUI extends JFrame implements ActionListener {
         this.accountNumber=accountNumber;
         userDao=new UserDao();
         transactionDao = new TransactionDao();
-        setTitle("Menu");
+        setTitle("enum_pac.Menu");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setBounds(600,200,400,400);

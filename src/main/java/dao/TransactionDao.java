@@ -1,6 +1,6 @@
 package dao;
 
-import UI.TypeTransaction;
+import enum_pac.TypeTransaction;
 import model.Transaction;
 
 import java.sql.Connection;

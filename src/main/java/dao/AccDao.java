@@ -10,7 +10,7 @@ public class AccDao {
 
     }
     public void insertDB(double d, String accNumber) {
-        String sql = "UPDATE public.account SET balance=? WHERE acountNumber=?";
+        String sql = "UPDATE public.account SET balance=? WHERE accountNumber=?";
         PreparedStatement statement = null;
         try {
             statement = connection.prepareStatement(sql);
@@ -39,7 +39,7 @@ public class AccDao {
     //-------------------------------------------------------
     public double[] selectAcc(String accNumber) {
 
-        String sqlS = "Select balance,minbalance FROM public.account WHERE acountnumber=?";
+        String sqlS = "Select balance,minbalance FROM public.account WHERE accountnumber=?";
         double[] d = new double[2];
         try {
 
