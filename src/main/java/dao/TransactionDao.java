@@ -17,7 +17,7 @@ public class TransactionDao {
     }
     public static ArrayList<Transaction> getTransaction(String accNumber) {
         ArrayList<Transaction> list=new ArrayList<>();
-        String sql = "SELECT type,amount,date FROM public.transaction WHERE accountnumber=?";
+        String sql = "SELECT type,amount,date FROM public.transaction WHERE account_number=?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, accNumber);
@@ -43,7 +43,7 @@ public class TransactionDao {
     public static void insertTransaction(TypeTransaction typeTransaction, double transactionAmount, String accNumber){
         Date date=new Date();
         java.sql.Date date1= new java.sql.Date(date.getTime());
-        String sql="INSERT INTO public.transaction (type,amount,date,accountnumber) VALUES (?,?,?,?)";
+        String sql="INSERT INTO public.transaction (type,amount,date,account_number) VALUES (?,?,?,?)";
         PreparedStatement statement= null;
         try {
             statement = connection.prepareStatement(sql);

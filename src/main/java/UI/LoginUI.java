@@ -61,6 +61,10 @@ public class LoginUI extends JFrame implements ActionListener {
     public static MenuUI getMenuUI(){
         return menuUI;
     }
+    public static void setVisiblityMenu(boolean visiblityMenu){
+        menuUI.setVisible(visiblityMenu);
+
+    }
 
 
 }

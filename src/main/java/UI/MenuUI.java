@@ -2,7 +2,9 @@ package UI;
 
 import dao.TransactionDao;
 import dao.UserDao;
+import enum_pac.PageEnum;
 import enum_pac.TypeTransaction;
+import model.Back;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +20,7 @@ public class MenuUI extends JFrame implements ActionListener {
     double balance,minBalance;
     TransactionDao transactionDao;
     UserDao userDao;
+    private static InfoUI infoUI;
     public MenuUI(String accountNumber) throws HeadlessException {
         this.accountNumber=accountNumber;
         userDao=new UserDao();
@@ -109,12 +112,14 @@ public class MenuUI extends JFrame implements ActionListener {
                     balance=balance-d;
                     userDao.getAccDao().insertDB(balance,accountNumber);
                     transactionDao.insertTransaction(TypeTransaction.withdraw,d,getAccountNumber());
-                    InfoUI infoUI=new InfoUI(3,balance);
+                     infoUI=new InfoUI(3,balance);
+                    Back.setBack(PageEnum.menu);
                     this.setVisible(false);
                 }
             }
             if (jRadioButtonInventory.isSelected()){
-                InfoUI infoUI=new InfoUI(1,balance);
+                 infoUI=new InfoUI(1,balance);
+                Back.setBack(PageEnum.menu);
                 this.setVisible(false);
             }
             if (jRadioButtonDeposit.isSelected()){
@@ -124,17 +129,20 @@ public class MenuUI extends JFrame implements ActionListener {
                     balance=balance+d;
                     userDao.getAccDao().insertDB(balance,accountNumber);
                     transactionDao.insertTransaction(TypeTransaction.deposit,d,getAccountNumber());
-                    InfoUI infoUI=new InfoUI(2,balance);
+                    infoUI=new InfoUI(2,balance);
+                    Back.setBack(PageEnum.menu);
                     this.setVisible(false);
 
                 }
             }
             if (jRadioButtonLast10Transaction.isSelected()){
                 TransactionListUI transactionListUI=new TransactionListUI(accountNumber);
+                Back.setBack(PageEnum.menu);
                 this.setVisible(false);
             }
             if (jRadioButtonExit.isSelected()){
-                InfoUI infoUI=new InfoUI(5,balance);
+                infoUI=new InfoUI(5,balance);
+                Back.setBack(PageEnum.menu);
                 this.setVisible(false);
             }
         }
@@ -147,7 +155,9 @@ public class MenuUI extends JFrame implements ActionListener {
     public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
     }
-
+    public static void setVisiblityInfo(boolean visiblityInfo){
+        infoUI.setVisible(visiblityInfo);
+    }
 
 
 }

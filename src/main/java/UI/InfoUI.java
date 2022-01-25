@@ -1,13 +1,18 @@
 package UI;
 
+import enum_pac.PageEnum;
+import model.Back;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class InfoUI extends JFrame {
+public class InfoUI extends JFrame implements ActionListener {
     JLabel jLabel;
     int i;
     double balance;
-
+    JButton jButtonBack;
     public InfoUI(int i, double balance) throws HeadlessException {
         this.balance = balance;
         this.i = i;
@@ -19,6 +24,7 @@ public class InfoUI extends JFrame {
         init();
         setText();
         container.add(jLabel);
+        container.add(jButtonBack);
         container.setLayout(null);
         setVisible(true);
         if(i==5){
@@ -36,8 +42,9 @@ public class InfoUI extends JFrame {
     private void init() {
         jLabel = new JLabel("info");
         jLabel.setBounds(100, 50, 200, 200);
-
-
+        jButtonBack =new JButton("Back");
+        jButtonBack.setBounds(20,10,70,30);
+        jButtonBack.addActionListener(this);
     }
 
     private void setText() {
@@ -64,5 +71,12 @@ public class InfoUI extends JFrame {
 
                 break;
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+
+        Back.getBack(PageEnum.info);
     }
 }
