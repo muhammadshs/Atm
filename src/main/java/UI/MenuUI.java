@@ -1,10 +1,12 @@
 package UI;
 
+import controller.MenuController;
 import dao.AccDao;
 import dao.TransactionDao;
 import dao.UserDao;
 import enum_pac.PageEnum;
 import enum_pac.TypeTransaction;
+import input.Validation;
 import model.Back;
 
 import javax.swing.*;
@@ -12,25 +14,24 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MenuUI extends JFrame implements ActionListener {
-    String accountNumber;
-    JRadioButton jRadioButtonInventory,jRadioButtonWithdraw,jRadioButtonDeposit,jRadioButtonLast10Transaction,jRadioButtonExit;
-   ButtonGroup buttonGroup;
-   JTextField jTextFieldDeposit,jTextFieldWithdraw;
+public class MenuUI extends JFrame {
+
+    JRadioButton jRadioButtonInventory, jRadioButtonWithdraw, jRadioButtonDeposit, jRadioButtonLast10Transaction, jRadioButtonExit;
+    ButtonGroup buttonGroup;
+    JTextField jTextFieldDeposit, jTextFieldWithdraw;
     JButton jButtonSubmit;
-    double balance,minBalance;
-    TransactionDao transactionDao;
-    AccDao accDao;
-    private static InfoUI infoUI;
+
+
+    String accountNumber;
+
+
     public MenuUI(String accountNumber) throws HeadlessException {
         this.accountNumber=accountNumber;
-        accDao=new AccDao(accountNumber);
-        transactionDao = new TransactionDao();
         setTitle("enum_pac.Menu");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
-        setBounds(600,200,400,400);
-        Container container=getContentPane();
+        setBounds(600, 200, 400, 400);
+        Container container = getContentPane();
         container.setBackground(Color.pink);
         init();
         container.add(jRadioButtonInventory);
@@ -44,125 +45,48 @@ public class MenuUI extends JFrame implements ActionListener {
         setLayout(null);
 
     }
-    private void init(){
-        buttonGroup=new ButtonGroup();
-        jRadioButtonInventory=new JRadioButton("1.Inventory");
-        jRadioButtonDeposit=new JRadioButton("2.Deposit");
-        jRadioButtonWithdraw=new JRadioButton("3.WithDraw");
-        jRadioButtonLast10Transaction=new JRadioButton("4.Last10Transaction");
-        jRadioButtonExit=new JRadioButton("5.Exit");
-        jButtonSubmit=new JButton("Submit");
-        jTextFieldDeposit=new JTextField();
-        jTextFieldWithdraw=new JTextField();
 
-        jRadioButtonInventory.setBounds(100,50,200,35);
-        jRadioButtonDeposit.setBounds(100,100,200,35);
-        jRadioButtonWithdraw.setBounds(100,150,200,35);
-        jRadioButtonLast10Transaction.setBounds(100,200,200,35);
-        jRadioButtonExit.setBounds(100,250,200,35);
-        jButtonSubmit.setBounds(150,300,100,40);
+    private void init() {
+        buttonGroup = new ButtonGroup();
+        jRadioButtonInventory = new JRadioButton("1.Inventory");
+        jRadioButtonDeposit = new JRadioButton("2.Deposit");
+        jRadioButtonWithdraw = new JRadioButton("3.WithDraw");
+        jRadioButtonLast10Transaction = new JRadioButton("4.Last10Transaction");
+        jRadioButtonExit = new JRadioButton("5.Exit");
+        jButtonSubmit = new JButton("Submit");
+        jTextFieldDeposit = new JTextField();
+        jTextFieldWithdraw = new JTextField();
+
+        jRadioButtonInventory.setBounds(100, 50, 200, 35);
+        jRadioButtonDeposit.setBounds(100, 100, 200, 35);
+        jRadioButtonWithdraw.setBounds(100, 150, 200, 35);
+        jRadioButtonLast10Transaction.setBounds(100, 200, 200, 35);
+        jRadioButtonExit.setBounds(100, 250, 200, 35);
+        jButtonSubmit.setBounds(150, 300, 100, 40);
         buttonGroup.add(jRadioButtonInventory);
         buttonGroup.add(jRadioButtonExit);
         buttonGroup.add(jRadioButtonDeposit);
         buttonGroup.add(jRadioButtonWithdraw);
         buttonGroup.add(jRadioButtonLast10Transaction);
-        jTextFieldDeposit.setBounds(210,100,100,35);
-        jTextFieldWithdraw.setBounds(210,150,100,35);
+        jTextFieldDeposit.setBounds(210, 100, 100, 35);
+        jTextFieldWithdraw.setBounds(210, 150, 100, 35);
         jTextFieldWithdraw.setVisible(false);
         jTextFieldDeposit.setVisible(false);
-        jRadioButtonWithdraw.addActionListener(this);
-        jRadioButtonDeposit.addActionListener(this);
-        jRadioButtonLast10Transaction.addActionListener(this);
-        jRadioButtonInventory.addActionListener(this);
-        jRadioButtonExit.addActionListener(this);
-        jButtonSubmit.addActionListener(this);
+        MenuController menuController = new MenuController(jRadioButtonInventory,jRadioButtonWithdraw,jRadioButtonDeposit,jRadioButtonLast10Transaction,jRadioButtonExit,jTextFieldDeposit,jTextFieldWithdraw,jButtonSubmit,this,accountNumber);
+        jRadioButtonWithdraw.addActionListener(menuController);
+        jRadioButtonDeposit.addActionListener(menuController);
+        jRadioButtonLast10Transaction.addActionListener(menuController);
+        jRadioButtonInventory.addActionListener(menuController);
+        jRadioButtonExit.addActionListener(menuController);
+        jButtonSubmit.addActionListener(menuController);
 
         //----------------------------------------------------------------
         //---------------------این رو نمیدونستم چجوری بزارم توی dao ------------------------------
-        double[] doubles=accDao.selectAcc(accountNumber);
-        balance=doubles[0];
-        minBalance=doubles[1];
+
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
 
-        if(jRadioButtonWithdraw.isSelected()){
-            jRadioButtonWithdraw.setBounds(100,150,100,35);
-            jTextFieldWithdraw.setVisible(true);
-            jTextFieldDeposit.setVisible(false);
-            jRadioButtonDeposit.setBounds(100,100,200,35);
-            jTextFieldDeposit.setText("");
 
-        }
-        if(jRadioButtonDeposit.isSelected()){
-            jRadioButtonDeposit.setBounds(100,100,100,35);
-            jTextFieldDeposit.setVisible(true);
-            jTextFieldWithdraw.setVisible(false);
-            jRadioButtonWithdraw.setBounds(100,150,200,35);
-            jTextFieldWithdraw.setText("");
-        }
-        if (jRadioButtonInventory.isSelected()||jRadioButtonExit.isSelected()||jRadioButtonLast10Transaction.isSelected()){
-            jTextFieldWithdraw.setVisible(false);
-            jRadioButtonWithdraw.setBounds(100,150,200,35);
-            jTextFieldDeposit.setVisible(false);
-            jRadioButtonDeposit.setBounds(100,100,200,35);
-            jTextFieldWithdraw.setText("");
-            jTextFieldDeposit.setText("");
-        }
-        if (e.getSource()==jButtonSubmit){
-            if(jRadioButtonWithdraw.isSelected()){
-                double d= Double.parseDouble(jTextFieldWithdraw.getText().trim());
-                if(balance-minBalance>=d){
-                    balance=balance-d;
-                    accDao.insertDB(balance,accountNumber);
-                    transactionDao.insertTransaction(TypeTransaction.withdraw,d,getAccountNumber());
-                     infoUI=new InfoUI(3,balance);
-                    Back.setBack(PageEnum.menu);
-                    this.setVisible(false);
-                }
-            }
-            if (jRadioButtonInventory.isSelected()){
-                 infoUI=new InfoUI(1,balance);
-                Back.setBack(PageEnum.menu);
-                this.setVisible(false);
-            }
-            if (jRadioButtonDeposit.isSelected()){
-                Double d=Double.parseDouble(jTextFieldDeposit.getText().trim());
-                //System.out.println(d);
-                if(balance-minBalance>=d){
-                    balance=balance+d;
-                    accDao.insertDB(balance,accountNumber);
-                    transactionDao.insertTransaction(TypeTransaction.deposit,d,getAccountNumber());
-                    infoUI=new InfoUI(2,balance);
-                    Back.setBack(PageEnum.menu);
-                    this.setVisible(false);
-
-                }
-            }
-            if (jRadioButtonLast10Transaction.isSelected()){
-                TransactionListUI transactionListUI=new TransactionListUI(accountNumber);
-                Back.setBack(PageEnum.menu);
-                this.setVisible(false);
-            }
-            if (jRadioButtonExit.isSelected()){
-                infoUI=new InfoUI(5,balance);
-                Back.setBack(PageEnum.menu);
-                this.setVisible(false);
-            }
-        }
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-    public static void setVisiblityInfo(boolean visiblityInfo){
-        infoUI.setVisible(visiblityInfo);
-    }
 
 
 }

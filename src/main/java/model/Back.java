@@ -4,6 +4,8 @@ import UI.InfoUI;
 import UI.LoginUI;
 import UI.MenuUI;
 import UI.TransactionListUI;
+import controller.LoginController;
+import controller.MenuController;
 import enum_pac.PageEnum;
 
 import java.util.Stack;
@@ -24,12 +26,12 @@ public class Back {
         switch (en){
             case menu :
                 if(pageEnum== transaction) {
-                    LoginUI.setVisiblityMenu(true);
+                    LoginController.setVisiblityMenu(true);
 
                 }
                 else if(pageEnum==info){
-                    MenuUI.setVisiblityInfo(false);
-                    LoginUI.setVisiblityMenu(true);
+                    MenuController.setVisiblityInfo(false);
+                    LoginController.setVisiblityMenu(true);
             }
                 break;
 

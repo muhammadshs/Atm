@@ -2,15 +2,11 @@ package dao;
 
 import java.sql.*;
 
-public class AccDao {
-    String accNumber;
-    private static Connection connection;
-    static {
-        connection=DBConnector.getConnect();
+public class AccDao extends DaoImp {
 
-    }
-    public AccDao(String accNumber){
-        this.accNumber=accNumber;
+
+    public AccDao(){
+
     }
     public void insertDB(double d, String accNumber) {
         String sql = "UPDATE public.account SET balance=? WHERE accountNumber=?";

@@ -3,14 +3,15 @@ package input;
 import exp.InvalidInputException;
 
 public class Validation {
-    public static int valInt(String value){
+    public static int valInt(String value) throws InvalidInputException{
 
             char[] ch = value.toCharArray();
             for (char cha : ch) {
                 try {
                     int a = (int) cha;
                 } catch (Exception e) {
-                    return -1;
+                    throw new InvalidInputException();
+
                 }
 
             }
@@ -27,14 +28,17 @@ public class Validation {
         }
         return val;
     }
-    public static double valDouble(Object value){
-        double num;
-        try {
-            num=(double) value;
+    public static double valDouble(String value){
+        char[] ch = value.toCharArray();
+        for (char cha : ch) {
+            try {
+                double a = (double) cha;
+            } catch (Exception e) {
+                throw new InvalidInputException();
+
+            }
+
         }
-        catch (Exception e){
-            throw new InvalidInputException();
-        }
-        return num;
+        return Double.parseDouble(value);
     }
 }

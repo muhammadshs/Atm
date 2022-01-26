@@ -10,11 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class TransactionDao {
-    private static Connection connection;
-    static {
-        connection=DBConnector.getConnect();
-    }
+public class TransactionDao extends DaoImp{
     public static ArrayList<Transaction> getTransaction(String accNumber) {
         ArrayList<Transaction> list=new ArrayList<>();
         String sql = "SELECT type,amount,date FROM public.transaction WHERE account_number=?";
