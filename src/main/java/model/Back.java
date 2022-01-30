@@ -1,16 +1,14 @@
 package model;
 
-import UI.InfoUI;
-import UI.LoginUI;
-import UI.MenuUI;
-import UI.TransactionListUI;
-import controller.LoginController;
 import controller.MenuController;
 import enum_pac.PageEnum;
+import service.LoginService;
+import service.MenuService;
 
 import java.util.Stack;
 
-import static enum_pac.PageEnum.*;
+import static enum_pac.PageEnum.info;
+import static enum_pac.PageEnum.transaction;
 
 public class Back {
     private static Stack<PageEnum> backList;
@@ -26,12 +24,13 @@ public class Back {
         switch (en){
             case menu :
                 if(pageEnum== transaction) {
-                    LoginController.setVisiblityMenu(true);
+                    LoginService.setVisibilityMenu(true);
 
                 }
                 else if(pageEnum==info){
-                    MenuController.setVisiblityInfo(false);
-                    LoginController.setVisiblityMenu(true);
+                    //---------------------------------------- این قسمت رو نگاه کنید
+                    MenuService.setVisiblityInfo(false);
+                    LoginService.setVisibilityMenu(true);
             }
                 break;
 

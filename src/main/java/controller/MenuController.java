@@ -9,6 +9,7 @@ import enum_pac.PageEnum;
 import enum_pac.TypeTransaction;
 import input.Validation;
 import model.Back;
+import service.MenuService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -18,12 +19,12 @@ public class MenuController implements ActionListener {
     JRadioButton jRadioButtonInventory, jRadioButtonWithdraw, jRadioButtonDeposit, jRadioButtonLast10Transaction, jRadioButtonExit;
     JTextField jTextFieldDeposit, jTextFieldWithdraw;
     JButton jButtonSubmit;
-    AccDao accDao;
-    double balance, minBalance;
+
+
     String accountNumber;
-    TransactionDao transactionDao;
-    private static InfoUI infoUI;
-    MenuUI menuUI;
+    private MenuService menuService;
+
+
     public MenuController(JRadioButton jRadioButtonInventory, JRadioButton jRadioButtonWithdraw, JRadioButton jRadioButtonDeposit, JRadioButton jRadioButtonLast10Transaction, JRadioButton jRadioButtonExit, JTextField jTextFieldDeposit, JTextField jTextFieldWithdraw, JButton jButtonSubmit, MenuUI menuUI,String accNumber) {
         this.jButtonSubmit=jButtonSubmit;
         this.jRadioButtonInventory = jRadioButtonInventory;
@@ -34,12 +35,9 @@ public class MenuController implements ActionListener {
         this.jTextFieldDeposit = jTextFieldDeposit;
         this.jTextFieldWithdraw = jTextFieldWithdraw;
         this.accountNumber = accNumber;
-        this.menuUI=menuUI;
-        transactionDao = new TransactionDao();
-        accDao = new AccDao();
-        double[] doubles = accDao.selectAcc(accountNumber);
-        balance = doubles[0];
-        minBalance = doubles[1];
+
+        menuService=new MenuService(accountNumber,menuUI);
+
     }
 
     @Override
@@ -70,56 +68,22 @@ public class MenuController implements ActionListener {
         }
         if (e.getSource()==jButtonSubmit){
             if(jRadioButtonWithdraw.isSelected()){
-                double d= Validation.valDouble(jTextFieldWithdraw.getText().trim());
-                if(balance-minBalance>=d){
-                    balance=balance-d;
-                    accDao.insertDB(balance,accountNumber);
-                    transactionDao.insertTransaction(TypeTransaction.withdraw,d,getAccountNumber());
-                    infoUI=new InfoUI(3,balance);
-                    Back.setBack(PageEnum.menu);
-                    menuUI.setVisible(false);
-                }
+                menuService.withDraw(jTextFieldWithdraw.getText());
             }
             if (jRadioButtonInventory.isSelected()){
-                infoUI=new InfoUI(1,balance);
-                Back.setBack(PageEnum.menu);
-                menuUI.setVisible(false);
+               menuService.inventory();
             }
             if (jRadioButtonDeposit.isSelected()){
-                Double d= Validation.valDouble(jTextFieldDeposit.getText().trim());
-                //System.out.println(d);
-                if(balance-minBalance>=d){
-                    balance=balance+d;
-                    accDao.insertDB(balance,accountNumber);
-                    transactionDao.insertTransaction(TypeTransaction.deposit,d,getAccountNumber());
-                    infoUI=new InfoUI(2,balance);
-                    Back.setBack(PageEnum.menu);
-                    menuUI.setVisible(false);
-
-                }
+               menuService.deposit(jTextFieldDeposit.getText());
             }
             if (jRadioButtonLast10Transaction.isSelected()){
-                TransactionListUI transactionListUI=new TransactionListUI(accountNumber);
-                Back.setBack(PageEnum.menu);
-                menuUI.setVisible(false);
+                menuService.last10Transaction();
             }
             if (jRadioButtonExit.isSelected()){
-                infoUI=new InfoUI(5,balance);
-                Back.setBack(PageEnum.menu);
-                menuUI.setVisible(false);
+                menuService.exit();
             }
         }
     }
-    public String getAccountNumber() {
-        return accountNumber;
-    }
 
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    public static void setVisiblityInfo(boolean visiblityInfo) {
-        infoUI.setVisible(visiblityInfo);
-    }
 
 }

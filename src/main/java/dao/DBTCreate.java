@@ -1,5 +1,8 @@
 package dao;
 
+import seeders.AccSeeder;
+import seeders.UserSeeder;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,7 +53,7 @@ public class DBTCreate {
             if(!resultSet.next()) {
                 Statement statement =connection.createStatement();
                 statement.executeUpdate(sql);
-                insertFirstUser();
+                UserSeeder userSeeder=new UserSeeder();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -58,15 +61,7 @@ public class DBTCreate {
 
     }
     //-------------------------------------------------------------------------------------
-    private  void insertFirstUser(){
-        String sql="INSERT INTO public.user(username,password,accountnumber) VALUES ('shah','1379','0023577541')";
-        try {
-            Statement statement=connection.createStatement();
-            statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+
     //-------------------------------------------------------------------------------------
     private  void createTableAcc() {
         String sqlS= """
@@ -98,7 +93,7 @@ public class DBTCreate {
             if(!resultSet.next()){
                 Statement statement2 = DBConnector.getConnect().createStatement();
                 statement2.executeUpdate(sql);
-                insertFirstAcc();
+                AccSeeder accSeeder=new AccSeeder();
             }
 
         } catch (SQLException e) {
@@ -108,15 +103,7 @@ public class DBTCreate {
     }
 
     //--------------------------------------------------------------------
-    private void insertFirstAcc() {
-        String sql = "INSERT INTO public.account(accountnumber,balance,minbalance) VALUES ('0023577541',10000,100)";
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+
     //--------------------------------------------------------------------
     private  void createTableTransaction() {
         String sqlS= """
