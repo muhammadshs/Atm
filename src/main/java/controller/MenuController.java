@@ -15,11 +15,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
 public class MenuController implements ActionListener {
     JRadioButton jRadioButtonInventory, jRadioButtonWithdraw, jRadioButtonDeposit, jRadioButtonLast10Transaction, jRadioButtonExit;
     JTextField jTextFieldDeposit, jTextFieldWithdraw;
     JButton jButtonSubmit;
-
+    private MenuUI menuUI;
+    private static InfoUI infoUI;
 
     String accountNumber;
     private MenuService menuService;
@@ -35,7 +37,7 @@ public class MenuController implements ActionListener {
         this.jTextFieldDeposit = jTextFieldDeposit;
         this.jTextFieldWithdraw = jTextFieldWithdraw;
         this.accountNumber = accNumber;
-
+        this.menuUI=menuUI;
         menuService=new MenuService(accountNumber,menuUI);
 
     }
@@ -69,21 +71,36 @@ public class MenuController implements ActionListener {
         if (e.getSource()==jButtonSubmit){
             if(jRadioButtonWithdraw.isSelected()){
                 menuService.withDraw(jTextFieldWithdraw.getText());
+                infoUI=new InfoUI(3,menuService.getBalance());
+                Back.setBack(PageEnum.menu);
+                menuUI.setVisible(false);
+
             }
             if (jRadioButtonInventory.isSelected()){
-               menuService.inventory();
+                infoUI=new InfoUI(1,menuService.getBalance());
+                Back.setBack(PageEnum.menu);
+                menuUI.setVisible(false);
             }
             if (jRadioButtonDeposit.isSelected()){
                menuService.deposit(jTextFieldDeposit.getText());
+                infoUI=new InfoUI(2,menuService.getBalance());
+                Back.setBack(PageEnum.menu);
+                menuUI.setVisible(false);
             }
             if (jRadioButtonLast10Transaction.isSelected()){
-                menuService.last10Transaction();
+                TransactionListUI transactionListUI=new TransactionListUI(accountNumber);
+                Back.setBack(PageEnum.menu);
+                menuUI.setVisible(false);
             }
             if (jRadioButtonExit.isSelected()){
-                menuService.exit();
+                infoUI=new InfoUI(5,menuService.getBalance());
+                Back.setBack(PageEnum.menu);
+                menuUI.setVisible(false);
             }
         }
     }
-
+    public static void setVisiblityInfo(boolean visiblityInfo) {
+        infoUI.setVisible(visiblityInfo);
+    }
 
 }

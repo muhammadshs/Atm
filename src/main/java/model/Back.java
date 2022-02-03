@@ -1,5 +1,6 @@
 package model;
 
+import controller.LoginController;
 import controller.MenuController;
 import enum_pac.PageEnum;
 import service.LoginService;
@@ -24,13 +25,13 @@ public class Back {
         switch (en){
             case menu :
                 if(pageEnum== transaction) {
-                    LoginService.setVisibilityMenu(true);
+                    LoginController.setVisibilityMenu(true);
 
                 }
                 else if(pageEnum==info){
                     //---------------------------------------- این قسمت رو نگاه کنید
-                    MenuService.setVisiblityInfo(false);
-                    LoginService.setVisibilityMenu(true);
+                    MenuController.setVisiblityInfo(false);
+                    LoginController.setVisibilityMenu(true);
             }
                 break;
 
